@@ -1,9 +1,10 @@
 "use client";
 import '@reown/appkit/react';
-import { CreateListing } from '@/components/CreateListing';
 import { useTwas } from '@/context/twas';
 import Link from 'next/link';
 import { BuyListing } from '@/components/BuyListing';
+import { CreateListing } from '@/components/CreateListing';
+import { TwasInfo } from '@/components/TwasInfo';
 
 export default function Home() {
   const { listing } = useTwas();
@@ -31,8 +32,10 @@ export default function Home() {
         </div>
       </nav>
 
+
       {/* Main Content */}
       <div className="flex-1 px-4 sm:px-6 py-8">
+        <TwasInfo />
         {listing ? (
           <BuyListing />
         ) : (

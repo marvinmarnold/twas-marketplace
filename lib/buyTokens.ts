@@ -26,10 +26,10 @@ export async function buyTokens(
 
     // Get the wallet client (signer)
     const clientBuyer = makeClient(
-        // account,
-        privateKeyToAccount(process.env.NEXT_PUBLIC_INVESTOR_PRIVATE_KEY as `0x${string}`, {
-            nonceManager,
-        }),
+        account,
+        // privateKeyToAccount(process.env.NEXT_PUBLIC_INVESTOR_PRIVATE_KEY as `0x${string}`, {
+        //     nonceManager,
+        // }),
         CHAIN,
         process.env.NEXT_PUBLIC_RPC_URL!
     )
