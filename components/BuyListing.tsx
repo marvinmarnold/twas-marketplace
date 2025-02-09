@@ -1,11 +1,10 @@
 "use client"
 
-import { useTwas } from '@/context/twas';
 import { IListing, TOKEN_DECIMALS, USDC_DECIMALS } from '@/lib/api';
 import BigNumber from 'bignumber.js';
 import { buyTokens } from '@/lib/buyTokens';
 import { useState } from 'react';
-import { updateListing } from '@/lib/supabase';
+import { contractAddresses } from '@geekyrocks/alkahest-ts';
 
 const formatDecimals = (value: string, decimals: number): string => {
     try {
@@ -60,7 +59,7 @@ export function BuyListing({ listing }: { listing: IListing }) {
                 throw new Error('Failed to update listing')
             }
 
-            const result = await response.json()
+            await response.json()
         } catch (error) {
             // Handle error (e.g., show error message)
             console.error('Purchase failed:', error)
@@ -224,6 +223,7 @@ export function BuyListing({ listing }: { listing: IListing }) {
                     >
                         {isProcessing ? 'Processing...' : 'Buy Now'}
                     </button>
+                    <p className="text-sm text-gray-500">You need USDC on Sepolia in order to invest. USDC address: {contractAddresses["Base Sepolia"].usdc}</p>
                 </div>
             </div>
         </div>

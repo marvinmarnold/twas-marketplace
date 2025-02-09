@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { IListing } from './api'
 
 if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE) {
     console.error('SUPABASE_URL or SUPABASE_SERVICE_ROLE is not set')
@@ -23,7 +24,7 @@ export async function getListing(id: string) {
     return data
 }
 
-export async function updateListing(id: string, updatedListing: any) {
+export async function updateListing(id: string, updatedListing: IListing) {
     const { data, error } = await supabase
         .from('listings')
         .update(updatedListing)
