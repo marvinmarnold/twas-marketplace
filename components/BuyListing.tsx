@@ -26,6 +26,7 @@ export function BuyListing() {
     // const { isConnected } = useAccount();
     const { setListing, listing } = useTwas();
     const [privateKey, setPrivateKey] = useState('');
+    const [isProcessing, setIsProcessing] = useState(false);
 
     if (!listing) return null
 
@@ -35,6 +36,7 @@ export function BuyListing() {
         // }
 
         try {
+            setIsProcessing(true);
             const updatedListing = await buyTokens(listing, privateKey)
             setListing(updatedListing)
             // Handle success (e.g., show success message, refresh listing state)
@@ -42,6 +44,8 @@ export function BuyListing() {
         } catch (error) {
             // Handle error (e.g., show error message)
             console.error('Purchase failed:', error)
+        } finally {
+            setIsProcessing(false);
         }
     };
 
@@ -186,18 +190,19 @@ export function BuyListing() {
                             onChange={(e) => setPrivateKey(e.target.value)}
                             placeholder="0x..."
                             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
+                            disabled={isProcessing}
                         />
                     </div>
 
                     <button
                         onClick={handleBuy}
-                        disabled={!privateKey.startsWith('0x')}
-                        className={`w-full py-3 px-4 rounded-md font-medium ${privateKey.startsWith('0x')
-                            ? 'bg-orange-500 hover:bg-orange-600 text-white'
-                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        disabled={!privateKey.startsWith('0x') || isProcessing}
+                        className={`w-full py-3 px-4 rounded-md font-medium ${privateKey.startsWith('0x') && !isProcessing
+                                ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                             }`}
                     >
-                        Buy Now
+                        {isProcessing ? 'Processing...' : 'Buy Now'}
                     </button>
                 </div>
             </div>
