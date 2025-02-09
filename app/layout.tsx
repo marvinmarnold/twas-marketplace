@@ -4,8 +4,6 @@ import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
-import { headers } from 'next/headers' // added
-import ContextProvider from '@/context'
 import { TwasProvider } from '@/context/twas'
 
 export const metadata: Metadata = {
@@ -19,13 +17,10 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
 
-  const headersObj = await headers();
-  const cookies = headersObj.get('cookie')
-
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ContextProvider cookies={cookies}><TwasProvider>{children}</TwasProvider></ContextProvider>
+        <TwasProvider>{children}</TwasProvider>
       </body>
     </html>
   )

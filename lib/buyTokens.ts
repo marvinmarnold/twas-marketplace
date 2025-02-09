@@ -54,7 +54,7 @@ export async function buyTokens(
 
         // pay 10eurc for 10usdc (fulfill the buy order)
         const payment = await clientBuyer.erc20.payErc20ForErc20(
-            listing.attestedEscrowId,
+            listing.escrowId,
         );
         console.log("payment", payment);
 
