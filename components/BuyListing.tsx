@@ -1,14 +1,10 @@
 "use client"
 
 import { useTwas } from '@/context/twas';
-import { CHAIN, TOKEN_DECIMALS, USDC_DECIMALS } from '@/lib/api';
+import { TOKEN_DECIMALS, USDC_DECIMALS } from '@/lib/api';
 import BigNumber from 'bignumber.js';
-import { useAccount } from 'wagmi'
+import { useAccount, useWalletClient } from 'wagmi'
 import { buyTokens } from '@/lib/buyTokens';
-import { useWalletClient } from 'wagmi'
-import { config } from '@/config';
-import { useTwasApi } from '@/hooks/useTwasApi';
-import { IListing } from '@/lib/api';
 
 const formatDecimals = (value: string, decimals: number): string => {
     try {
@@ -28,7 +24,6 @@ const formatDate = (timestamp: number): string => {
 
 export const BuyListing = () => {
     const { isConnected } = useAccount();
-    const { isLoading, error } = useTwasApi();
     const { setListing, listing } = useTwas();
     const { data: client } = useWalletClient()
 
@@ -41,7 +36,8 @@ export const BuyListing = () => {
 
         try {
             console.log("client", client)
-            const updatedListing = await buyTokens(listing, client?.account!)
+            if (!client) return;
+            const updatedListing = await buyTokens(listing, client.account)
             setListing(updatedListing)
             // Handle success (e.g., show success message, refresh listing state)
             console.log('Purchase successful:', updatedListing)
