@@ -1,20 +1,20 @@
 "use client"
 
-import { Account, createPublicClient, http } from 'viem'
+import { createPublicClient, http } from 'viem'
 import { makeClient, contractAddresses } from "@geekyrocks/alkahest-ts";
 import { CHAIN, IListing } from './api';
 import { privateKeyToAccount, nonceManager } from 'viem/accounts';
 
 export async function buyTokens(
-    listing: IListing, account: Account): Promise<IListing> {
+    listing: IListing, privateKey: string): Promise<IListing> {
     console.log("buying tokens", listing)
 
     if (!process.env.NEXT_PUBLIC_RPC_URL) {
         throw new Error("Missing environment variables NEXT_PUBLIC_RPC_URL");
     }
 
-    if (!process.env.NEXT_PUBLIC_INVESTOR_PRIVATE_KEY || !process.env.NEXT_PUBLIC_RPC_URL) {
-        throw new Error("Missing environment variables NEXT_PUBLIC_RPC_URL and/or NEXT_PUBLIC_INVESTOR_PRIVATE_KEY");
+    if (!process.env.NEXT_PUBLIC_RPC_URL) {
+        throw new Error("Missing environment variables NEXT_PUBLIC_RPC_URL");
     }
 
     const publicClient = createPublicClient({
@@ -22,14 +22,14 @@ export async function buyTokens(
         transport: http(process.env.NEXT_PUBLIC_RPC_URL)
     });
 
-    console.log("account", account);
+    // console.log("account", account);
 
     // Get the wallet client (signer)
     const clientBuyer = makeClient(
-        account,
-        // privateKeyToAccount(process.env.NEXT_PUBLIC_INVESTOR_PRIVATE_KEY as `0x${string}`, {
-        //     nonceManager,
-        // }),
+        // account,
+        privateKeyToAccount(privateKey as `0x${string}`, {
+            nonceManager,
+        }),
         CHAIN,
         process.env.NEXT_PUBLIC_RPC_URL!
     )
