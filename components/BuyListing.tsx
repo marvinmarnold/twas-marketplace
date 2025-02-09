@@ -3,8 +3,8 @@
 import { useTwas } from '@/context/twas';
 import { TOKEN_DECIMALS, USDC_DECIMALS } from '@/lib/api';
 import BigNumber from 'bignumber.js';
-import { useAccount, useWalletClient } from 'wagmi'
 import { buyTokens } from '@/lib/buyTokens';
+import { useState } from 'react';
 
 const formatDecimals = (value: string, decimals: number): string => {
     try {
@@ -22,28 +22,30 @@ const formatDate = (timestamp: number): string => {
     });
 };
 
-export const BuyListing = () => {
-    const { isConnected } = useAccount();
+export function BuyListing() {
+    // const { isConnected } = useAccount();
     const { setListing, listing } = useTwas();
-    const { data: client } = useWalletClient()
+    const [privateKey, setPrivateKey] = useState('');
+    const [isProcessing, setIsProcessing] = useState(false);
 
     if (!listing) return null
 
     const handleBuy = async () => {
-        if (!isConnected) {
-            return;
-        }
+        // if (!isConnected) {
+        //     return;
+        // }
 
         try {
-            console.log("client", client)
-            if (!client) return;
-            const updatedListing = await buyTokens(listing, client.account)
+            setIsProcessing(true);
+            const updatedListing = await buyTokens(listing, privateKey)
             setListing(updatedListing)
             // Handle success (e.g., show success message, refresh listing state)
             console.log('Purchase successful:', updatedListing)
         } catch (error) {
             // Handle error (e.g., show error message)
             console.error('Purchase failed:', error)
+        } finally {
+            setIsProcessing(false);
         }
     };
 
@@ -176,14 +178,34 @@ export const BuyListing = () => {
                     </p>
                 </div>
 
-                <button
-                    onClick={handleBuy}
-                    disabled={!isConnected}
-                    className="w-full py-3 px-4 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
-                >
-                    Buy Now
-                </button>
+                <div className="mt-6 space-y-4">
+                    <div>
+                        <label htmlFor="privateKey" className="block text-sm font-medium text-gray-700 mb-1">
+                            Private Key (starts with 0x)
+                        </label>
+                        <input
+                            type="password"
+                            id="privateKey"
+                            value={privateKey}
+                            onChange={(e) => setPrivateKey(e.target.value)}
+                            placeholder="0x..."
+                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
+                            disabled={isProcessing}
+                        />
+                    </div>
+
+                    <button
+                        onClick={handleBuy}
+                        disabled={!privateKey.startsWith('0x') || isProcessing}
+                        className={`w-full py-3 px-4 rounded-md font-medium ${privateKey.startsWith('0x') && !isProcessing
+                                ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                            }`}
+                    >
+                        {isProcessing ? 'Processing...' : 'Buy Now'}
+                    </button>
+                </div>
             </div>
         </div>
     );
-};
+}
