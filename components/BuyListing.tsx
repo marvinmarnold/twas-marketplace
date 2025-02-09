@@ -74,6 +74,10 @@ export function BuyListing({ listing }: { listing: IListing }) {
             <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
                 <h2 className="text-2xl font-bold mb-6 text-green-600">Purchase Confirmed! 🎉</h2>
 
+                <div className="space-y-1 my-4">
+                    <p className="text-gray-600">You are now a co-founder. You can check out the business at <a href={process.env.NEXT_PUBLIC_SHOP_URL} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">{process.env.NEXT_PUBLIC_SHOP_URL}</a></p>
+                    <p className="text-gray-600">Password: {process.env.NEXT_PUBLIC_SHOP_PASSWORD}</p>
+                </div>
                 <div className="space-y-4">
                     <div className="p-4 bg-green-50 border border-green-200 rounded-md">
                         <h3 className="font-semibold text-green-800 mb-2">Transaction Details</h3>
@@ -121,7 +125,7 @@ export function BuyListing({ listing }: { listing: IListing }) {
 
                     <div className="mt-6 text-center">
                         <p className="text-gray-600">
-                            Your tokens have been successfully purchased and transferred to your wallet.
+                            Your equity in the business has been successfully purchased and transferred to your wallet.
                         </p>
                     </div>
                 </div>
