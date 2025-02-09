@@ -1,14 +1,17 @@
-"use client";
-
+import ListingOverview from '@/components/ListingOverview';
+import { getListing } from '@/lib/supabase';
 import Link from 'next/link';
-import { TwasInfo } from '@/components/TwasInfo';
-import { usePathname } from 'next/navigation'
 
 
-export default function Home() {
-  const pathname = usePathname()
-  console.log('pathname', pathname)
-
+export default async function ListingPage({
+  params,
+}: {
+  params: Promise<{ listingId: string }>
+}) {
+  const listingId = (await params).listingId
+  console.log('listingId', listingId)
+  const listing = await getListing(listingId)
+  console.log('listing', listing)
   return (
     <main className="min-h-screen flex flex-col bg-white">
       {/* Navbar */}
@@ -20,15 +23,14 @@ export default function Home() {
             </Link>
           </div>
           <div>
+            {/* -@ts-expect-error msg */}
+            {/* <appkit-button /> */}
           </div>
         </div>
       </nav>
 
+      <ListingOverview listing={listing} />
 
-      {/* Main Content */}
-      <div className="flex-1 px-4 sm:px-6 py-8">
-        <TwasInfo />
-      </div>
     </main>
   );
 }
